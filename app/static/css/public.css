@@ -1,0 +1,63 @@
+body.public {
+    background: #f5f7fb;
+    color: #1f2937;
+}
+
+.brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.request-id {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---- digital gate pass ---- */
+.pass-card {
+    overflow: hidden;
+    border: 0;
+}
+
+.pass-header {
+    background: #2563eb;
+    color: #fff;
+    padding: 14px;
+}
+
+.pass-qr {
+    width: 240px;
+    max-width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+}
+
+.pass-inactive .pass-qr {
+    opacity: 0.25;
+}
+
+.pass-details dt {
+    color: #6b7280;
+    font-weight: 400;
+    font-size: 0.8rem;
+}
+
+.pass-details dd {
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+}
+
+@media print {
+    body.public { background: #fff; }
+    .pass-card { box-shadow: none !important; border: 1px solid #ccc; }
+}

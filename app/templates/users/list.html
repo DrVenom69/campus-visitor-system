@@ -1,0 +1,41 @@
+{% extends 'admin/layout.html' %}
+{% set active = 'users' %}
+
+{% block title %}Users | Campus Gate Pass{% endblock %}
+{% block heading %}Users{% endblock %}
+{% block subheading %}Admin, host and security accounts{% endblock %}
+
+{% block page %}
+<div class="toolbar">
+    <a class="btn btn-primary" href="{{ url_for('users.new') }}">+ New user</a>
+</div>
+
+<div class="content-card">
+    <div class="table-wrapper">
+        <table class="visitors-table">
+            <thead>
+                <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td><strong>{{ user.name }}</strong>{% if user.id == current_user.id %} <span class="muted">(you)</span>{% endif %}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role|title }}</td>
+                    <td>{% if user.is_active %}<span class="status-badge checked-in">Active</span>{% else %}<span class="status-badge cancelled">Deactivated</span>{% endif %}</td>
+                    <td>{{ user.created_at|local_dt }}</td>
+                    <td class="text-right">
+                        {% if user.id != current_user.id %}
+                        <form method="post" action="{{ url_for('users.toggle', user_id=user.id) }}" class="inline-form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button class="btn btn-small" type="submit">{% if user.is_active %}Deactivate{% else %}Activate{% endif %}</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

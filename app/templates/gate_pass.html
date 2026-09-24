@@ -1,0 +1,38 @@
+{% extends 'base_public.html' %}
+
+{% block title %}Gate pass {{ visit.request_id }} | Campus Gate Pass{% endblock %}
+
+{% block content %}
+{% set usable = gate_pass.is_active and visit.status in ('Approved', 'Checked In') %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-5">
+        <div class="card shadow-sm pass-card {% if not usable %}pass-inactive{% endif %}">
+            <div class="pass-header text-center">
+                <div class="fw-semibold">Campus Gate Pass</div>
+                <div class="small">Visitor</div>
+            </div>
+            <div class="card-body text-center p-4">
+                <img class="pass-qr" src="{{ url_for('public.pass_qr', code=gate_pass.pass_code) }}" alt="QR code for gate pass {{ visit.request_id }}">
+                <div class="request-id mt-3">{{ visit.request_id }}</div>
+                <div class="badge text-bg-{{ visit.status|bs_status }} mb-3">{{ visit.status }}</div>
+
+                <dl class="pass-details text-start">
+                    <dt>Name</dt><dd>{{ visit.visitor.full_name }}</dd>
+                    <dt>Purpose</dt><dd>{{ visit.purpose }}</dd>
+                    <dt>Visit date</dt><dd>{{ visit.visit_date.strftime('%A, %d %b %Y') }}</dd>
+                    <dt>Host</dt><dd>{% if visit.host_assignment %}{{ visit.host_assignment.host.name }}{% else %}{{ visit.host_requested or 'To be assigned' }}{% endif %}</dd>
+                </dl>
+
+                {% if usable %}
+                    <p class="small text-secondary mb-0">Show this QR code at the gate. Valid on the visit date only.</p>
+                {% else %}
+                    <p class="small text-danger mb-0">This pass is not active.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="text-center mt-3 d-print-none">
+            <button class="btn btn-outline-primary" type="button" onclick="window.print()">Print or save as PDF</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

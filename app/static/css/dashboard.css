@@ -1,0 +1,640 @@
+/* =========================================
+   Dashboard Layout
+========================================= */
+
+.dashboard {
+    min-height: 100vh;
+    display: flex;
+    background: #f5f7fb;
+}
+
+
+/* =========================================
+   Sidebar
+========================================= */
+
+.sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+}
+
+.sidebar-logo {
+    height: 82px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #eef0f3;
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: #2563eb;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.sidebar-logo h2 {
+    font-size: 16px;
+    color: #111827;
+    line-height: 1.2;
+}
+
+.sidebar-logo span {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+
+/* =========================================
+   Navigation
+========================================= */
+
+.sidebar-nav {
+    padding: 24px 14px;
+    flex: 1;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 12px 14px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.nav-item:hover {
+    background: #f3f6fb;
+    color: #2563eb;
+}
+
+.nav-item.active {
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.nav-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.nav-divider {
+    height: 1px;
+    background: #eef0f3;
+    margin: 18px 8px;
+}
+
+
+/* =========================================
+   Sidebar User
+========================================= */
+
+.sidebar-bottom {
+    padding: 18px;
+    border-top: 1px solid #eef0f3;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar,
+.topbar-avatar,
+.visitor-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 600;
+}
+
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    background: #dbeafe;
+    color: #2563eb;
+    font-size: 13px;
+}
+
+.user-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.user-info strong {
+    font-size: 12px;
+    color: #1f2937;
+}
+
+.user-info span {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.logout-btn {
+    border: 0;
+    background: transparent;
+    color: #9ca3af;
+    font-size: 19px;
+}
+
+.logout-btn:hover {
+    color: #ef4444;
+}
+
+
+/* =========================================
+   Main Content
+========================================= */
+
+.main-content {
+    width: calc(100% - 260px);
+    margin-left: 260px;
+    min-height: 100vh;
+}
+
+
+/* =========================================
+   Topbar
+========================================= */
+
+.topbar {
+    height: 82px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page-heading h1 {
+    font-size: 21px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.page-heading p {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.notification-btn {
+    position: relative;
+    border: 0;
+    background: transparent;
+    font-size: 19px;
+    color: #6b7280;
+}
+
+.notification-dot {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: #ef4444;
+    border-radius: 50%;
+    top: 0;
+    right: 0;
+    border: 2px solid #ffffff;
+}
+
+.topbar-avatar {
+    width: 38px;
+    height: 38px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 13px;
+}
+
+.mobile-menu {
+    display: none;
+}
+
+
+/* =========================================
+   Dashboard Content
+========================================= */
+
+.dashboard-content {
+    padding: 32px;
+}
+
+
+/* =========================================
+   Welcome Card
+========================================= */
+
+.welcome-card {
+    background: #1d4ed8;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 30px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 26px;
+}
+
+.welcome-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    opacity: 0.75;
+}
+
+.welcome-card h2 {
+    font-size: 23px;
+    margin: 8px 0;
+}
+
+.welcome-card p {
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+.primary-btn {
+    background: #ffffff;
+    color: #1d4ed8;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.primary-btn:hover {
+    background: #f8fafc;
+}
+
+
+/* =========================================
+   Statistics
+========================================= */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 26px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.stat-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.visitors-icon {
+    background: #eff6ff;
+}
+
+.active-icon {
+    background: #ecfdf5;
+}
+
+.today-icon {
+    background: #fff7ed;
+}
+
+.pending-icon {
+    background: #fef2f2;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-info > span {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-bottom: 4px;
+}
+
+.stat-info strong {
+    font-size: 22px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.stat-info small {
+    font-size: 10px;
+    color: #10b981;
+}
+
+
+/* =========================================
+   Content Card
+========================================= */
+
+.content-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 22px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eef0f3;
+}
+
+.card-header h3 {
+    font-size: 15px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.card-header p {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.view-all {
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* =========================================
+   Visitors Table
+========================================= */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.visitors-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+.visitors-table th {
+    text-align: left;
+    padding: 14px 24px;
+    background: #fafafa;
+    color: #9ca3af;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.visitors-table td {
+    padding: 16px 24px;
+    border-top: 1px solid #f0f1f3;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.visitor-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.visitor-avatar {
+    width: 34px;
+    height: 34px;
+    background: #f3f4f6;
+    color: #4b5563;
+    font-size: 10px;
+}
+
+.visitor-cell div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.visitor-cell strong {
+    color: #1f2937;
+    font-size: 12px;
+}
+
+.visitor-cell span {
+    color: #9ca3af;
+    font-size: 10px;
+}
+
+
+/* =========================================
+   Status Badges
+========================================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.checked-in {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.pending {
+    background: #fff7ed;
+    color: #d97706;
+}
+
+.checked-out {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+
+/* =========================================
+   Responsive
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 230px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .topbar {
+        padding: 0 18px;
+    }
+
+    .mobile-menu {
+        display: block;
+        font-size: 21px;
+        cursor: pointer;
+        margin-right: 14px;
+    }
+
+    .page-heading {
+        flex: 1;
+    }
+
+    .dashboard-content {
+        padding: 20px 16px;
+    }
+
+    .welcome-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 22px;
+        padding: 24px;
+    }
+
+    .welcome-card h2 {
+        font-size: 20px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .topbar {
+        height: 70px;
+    }
+
+    .page-heading h1 {
+        font-size: 18px;
+    }
+
+    .page-heading p {
+        display: none;
+    }
+
+    .topbar-actions {
+        gap: 12px;
+    }
+
+    .welcome-card {
+        padding: 20px;
+    }
+
+    .welcome-card h2 {
+        font-size: 18px;
+    }
+
+    .primary-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .card-header {
+        padding: 18px;
+    }
+
+}
+
+/* =========================================
+   Extra status badges (added for the full status flow:
+   Pending -> Approved -> Checked In -> Checked Out -> Completed,
+   or Rejected / Cancelled)
+========================================= */
+
+.approved {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.completed {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.rejected {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.cancelled {
+    background: #f3f4f6;
+    color: #9ca3af;
+}
+
+.empty-row td {
+    text-align: center;
+    color: #9ca3af;
+    padding: 28px 0;
+}
+
+
+/* Logout is a POST form (safer than a plain link); keep the button laid out as before */
+.logout-form {
+    display: contents;
+}

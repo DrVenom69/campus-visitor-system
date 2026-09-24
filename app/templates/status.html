@@ -1,0 +1,57 @@
+{% extends 'base_public.html' %}
+
+{% block title %}Check your request | Campus Gate Pass{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <h1 class="h3 mb-1">Check your request</h1>
+        <p class="text-secondary mb-4">Enter the request ID you were given and the email you used.</p>
+
+        <form method="post" action="{{ url_for('public.status') }}" class="card shadow-sm mb-4">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <label class="form-label" for="request_id">Request ID</label>
+                    <input class="form-control" id="request_id" name="request_id" value="{{ form.request_id }}"
+                           placeholder="VR-20260924-0001" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="email">Email</label>
+                    <input class="form-control" id="email" name="email" type="email" value="{{ form.email }}" required>
+                </div>
+                <button class="btn btn-primary" type="submit">Check status</button>
+            </div>
+        </form>
+
+        {% if visit %}
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <div class="text-secondary small">Request</div>
+                        <div class="fw-semibold">{{ visit.request_id }}</div>
+                    </div>
+                    <span class="badge text-bg-{{ visit.status|bs_status }} fs-6">{{ visit.status }}</span>
+                </div>
+                <p class="mb-1"><span class="text-secondary">Visit date:</span> {{ visit.visit_date.strftime('%A, %d %b %Y') }}</p>
+                <p class="mb-3"><span class="text-secondary">Purpose:</span> {{ visit.purpose }}</p>
+
+                {% if visit.status == 'Pending' %}
+                    <div class="alert alert-warning mb-0">Your request is waiting for review. Check again later.</div>
+                {% elif visit.status == 'Rejected' %}
+                    <div class="alert alert-danger mb-0"><strong>Not approved.</strong> {{ visit.rejection_reason }}</div>
+                {% elif visit.status == 'Cancelled' %}
+                    <div class="alert alert-secondary mb-0">This request was cancelled.</div>
+                {% elif visit.gate_pass and visit.status in ('Approved', 'Checked In') %}
+                    <div class="alert alert-success">Approved. Show your QR gate pass at the gate on the day of your visit.</div>
+                    <a class="btn btn-success" href="{{ url_for('public.gate_pass', code=visit.gate_pass.pass_code) }}">Open my gate pass</a>
+                {% else %}
+                    <div class="alert alert-secondary mb-0">This visit is finished.</div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

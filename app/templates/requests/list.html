@@ -1,0 +1,62 @@
+{% extends 'admin/layout.html' %}
+{% from '_macros.html' import status_badge, render_pagination with context %}
+{% set active = 'requests' %}
+
+{% block title %}Requests | Campus Gate Pass{% endblock %}
+{% block heading %}Visit Requests{% endblock %}
+{% block subheading %}Review, approve or reject visit requests{% endblock %}
+
+{% block page %}
+<div class="tabs">
+    {% for name in ['Pending', 'Approved', 'Checked In', 'Checked Out', 'Completed', 'Rejected', 'Cancelled'] %}
+        <a class="tab {% if status == name %}active{% endif %}" href="{{ url_for('requests.index', status=name) }}">
+            {{ name }} <span class="tab-count">{{ counts.get(name, 0) }}</span>
+        </a>
+    {% endfor %}
+    <a class="tab {% if status == 'All' %}active{% endif %}" href="{{ url_for('requests.index', status='All') }}">
+        All <span class="tab-count">{{ total }}</span>
+    </a>
+</div>
+
+<div class="content-card">
+    <div class="table-wrapper">
+        <table class="visitors-table">
+            <thead>
+                <tr>
+                    <th>Request</th>
+                    <th>Visitor</th>
+                    <th>Purpose</th>
+                    <th>Visit Date</th>
+                    <th>Host</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for visit in pagination.items %}
+                <tr>
+                    <td><a href="{{ url_for('requests.detail', request_id=visit.request_id) }}"><strong>{{ visit.request_id }}</strong></a></td>
+                    <td>
+                        <div class="visitor-cell">
+                            <div>
+                                <strong>{{ visit.visitor.full_name }}</strong>
+                                <span>{{ visit.visitor.email }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ visit.purpose }}</td>
+                    <td>{{ visit.visit_date.strftime('%d %b %Y') }}</td>
+                    <td>{% if visit.host_assignment %}{{ visit.host_assignment.host.name }}{% else %}<span class="muted">{{ visit.host_requested or 'Not assigned' }}</span>{% endif %}</td>
+                    <td>{{ status_badge(visit.status) }}</td>
+                    <td class="text-right"><a class="btn btn-small" href="{{ url_for('requests.detail', request_id=visit.request_id) }}">{% if visit.status == 'Pending' %}Review{% else %}View{% endif %}</a></td>
+                </tr>
+                {% else %}
+                <tr class="empty-row"><td colspan="7">No {{ status|lower if status != 'All' else '' }} requests.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{{ render_pagination(pagination) }}
+{% endblock %}

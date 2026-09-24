@@ -1,0 +1,91 @@
+{% extends 'admin/layout.html' %}
+{% set active = 'gate' %}
+
+{% block title %}Gate check-in | Campus Gate Pass{% endblock %}
+{% block heading %}Gate Check-in{% endblock %}
+{% block subheading %}Scan a visitor's QR code or type the pass code{% endblock %}
+
+{% block page %}
+<div class="detail-layout">
+
+    <div>
+        <div class="content-card">
+            <div class="card-header"><div><h3>Find a pass</h3></div></div>
+            <form method="post" action="{{ url_for('gate.index') }}" class="card-form" id="lookup-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label for="pass_code">Pass code</label>
+                    <input id="pass_code" name="pass_code" type="text" value="{{ code }}"
+                           autocomplete="off" autocapitalize="off" spellcheck="false" autofocus required>
+                </div>
+                <div class="button-row">
+                    <button class="btn btn-primary" type="submit">Look up</button>
+                    <button class="btn btn-outline" type="button" id="scan-toggle">Scan with camera</button>
+                </div>
+            </form>
+
+            <div id="scanner" class="scanner hidden">
+                <video id="scanner-video" playsinline muted></video>
+                <p class="card-note" id="scanner-status">Point the camera at the QR code.</p>
+            </div>
+            <canvas id="scanner-canvas" class="hidden"></canvas>
+        </div>
+
+        {% if check %}
+        <div class="content-card result-card {% if check.action %}result-ok{% else %}result-blocked{% endif %}">
+            <div class="card-header">
+                <div>
+                    <h3>{% if check.action == 'check_in' %}Ready to check in{% elif check.action == 'check_out' %}Ready to check out{% else %}Cannot let this visitor in{% endif %}</h3>
+                    <p>{{ check.message }}</p>
+                </div>
+            </div>
+
+            {% if check.visit %}
+            <dl class="detail-list">
+                <dt>Visitor</dt><dd>{{ check.visit.visitor.full_name }}</dd>
+                <dt>Request</dt><dd>{{ check.visit.request_id }}</dd>
+                <dt>Purpose</dt><dd>{{ check.visit.purpose }}</dd>
+                <dt>Visit date</dt><dd>{{ check.visit.visit_date.strftime('%d %b %Y') }}</dd>
+                <dt>Host</dt><dd>{% if check.visit.host_assignment %}{{ check.visit.host_assignment.host.name }}{% else %}{{ check.visit.host_requested or 'Not assigned' }}{% endif %}</dd>
+                <dt>Status</dt><dd>{{ check.visit.status }}</dd>
+            </dl>
+            {% endif %}
+
+            {% if check.action %}
+            <form method="post" action="{{ url_for('gate.do_check_in' if check.action == 'check_in' else 'gate.do_check_out') }}" class="card-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="pass_code" value="{{ check.gate_pass.pass_code }}">
+                <button class="btn {% if check.action == 'check_in' %}btn-primary{% else %}btn-warning{% endif %} btn-block" type="submit">
+                    {% if check.action == 'check_in' %}Check in {{ check.visit.visitor.full_name }}{% else %}Check out {{ check.visit.visitor.full_name }}{% endif %}
+                </button>
+            </form>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="detail-side">
+        <div class="content-card">
+            <div class="card-header"><div><h3>Latest gate activity</h3></div></div>
+            <ul class="activity-list">
+                {% for record in recent %}
+                <li>
+                    <strong>{{ record.gate_pass.visit_request.visitor.full_name }}</strong>
+                    <span>
+                        {% if record.check_out_time %}Out {{ record.check_out_time|local_time }}{% else %}In {{ record.check_in_time|local_time }}{% endif %}
+                        · {{ record.gate_pass.visit_request.request_id }}
+                    </span>
+                </li>
+                {% else %}
+                <li class="muted">No gate activity yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<script src="{{ url_for('static', filename='js/scanner.js') }}"></script>
+{% endblock %}

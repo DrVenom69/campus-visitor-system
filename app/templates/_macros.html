@@ -1,0 +1,20 @@
+{# Shared template pieces for the staff pages. Import with:
+   {% from '_macros.html' import status_badge, render_pagination with context %} #}
+
+{% macro status_badge(status) -%}
+<span class="status-badge {{ status|lower|replace(' ', '-') }}">{{ status }}</span>
+{%- endmacro %}
+
+{% macro render_pagination(pag) %}
+{% if pag.pages > 1 %}
+<nav class="pagination" aria-label="Pages">
+    {% if pag.has_prev %}
+        <a href="{{ url_for(request.endpoint, **dict(request.args.to_dict(), page=pag.prev_num)) }}">← Previous</a>
+    {% endif %}
+    <span>Page {{ pag.page }} of {{ pag.pages }}</span>
+    {% if pag.has_next %}
+        <a href="{{ url_for(request.endpoint, **dict(request.args.to_dict(), page=pag.next_num)) }}">Next →</a>
+    {% endif %}
+</nav>
+{% endif %}
+{% endmacro %}

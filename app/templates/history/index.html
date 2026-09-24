@@ -1,0 +1,74 @@
+{% extends 'admin/layout.html' %}
+{% from '_macros.html' import status_badge, render_pagination with context %}
+{% set active = 'history' %}
+
+{% block title %}Visit history | Campus Gate Pass{% endblock %}
+{% block heading %}Visit History{% endblock %}
+{% block subheading %}{% if current_user.role == 'host' %}Visitors assigned to you{% else %}Search every visit request{% endif %}{% endblock %}
+
+{% block page %}
+<form method="get" action="{{ url_for('history.index') }}" class="filter-bar">
+    <div class="form-group grow">
+        <label for="q">Search</label>
+        <input id="q" name="q" type="search" value="{{ q }}" placeholder="Name, email or request ID">
+    </div>
+    <div class="form-group">
+        <label for="status">Status</label>
+        <select id="status" name="status">
+            <option value="">All statuses</option>
+            {% for name in statuses %}<option value="{{ name }}" {% if status == name %}selected{% endif %}>{{ name }}</option>{% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="date_from">Visit from</label>
+        <input id="date_from" name="date_from" type="date" value="{{ date_from }}">
+    </div>
+    <div class="form-group">
+        <label for="date_to">Visit to</label>
+        <input id="date_to" name="date_to" type="date" value="{{ date_to }}">
+    </div>
+    <div class="button-row">
+        <button class="btn btn-primary" type="submit">Filter</button>
+        <a class="btn btn-outline" href="{{ url_for('history.index') }}">Clear</a>
+    </div>
+</form>
+
+<div class="content-card">
+    <div class="table-wrapper">
+        <table class="visitors-table">
+            <thead>
+                <tr><th>Request</th><th>Visitor</th><th>Purpose</th><th>Host</th><th>Visit Date</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                {% for visit in pagination.items %}
+                <tr>
+                    <td>
+                        {% if current_user.role == 'admin' %}
+                            <a href="{{ url_for('requests.detail', request_id=visit.request_id) }}"><strong>{{ visit.request_id }}</strong></a>
+                        {% else %}
+                            <strong>{{ visit.request_id }}</strong>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="visitor-cell">
+                            <div>
+                                <strong>{{ visit.visitor.full_name }}</strong>
+                                <span>{{ visit.visitor.email }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ visit.purpose }}</td>
+                    <td>{% if visit.host_assignment %}{{ visit.host_assignment.host.name }}{% else %}<span class="muted">{{ visit.host_requested or 'Not assigned' }}</span>{% endif %}</td>
+                    <td>{{ visit.visit_date.strftime('%d %b %Y') }}</td>
+                    <td>{{ status_badge(visit.status) }}</td>
+                </tr>
+                {% else %}
+                <tr class="empty-row"><td colspan="6">No visits match these filters.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{{ render_pagination(pagination) }}
+{% endblock %}

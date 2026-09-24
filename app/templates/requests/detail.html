@@ -1,0 +1,142 @@
+{% extends 'admin/layout.html' %}
+{% from '_macros.html' import status_badge %}
+{% set active = 'requests' %}
+
+{% block title %}{{ visit.request_id }} | Campus Gate Pass{% endblock %}
+{% block heading %}{{ visit.request_id }}{% endblock %}
+{% block subheading %}{{ visit.visitor.full_name }} · {{ visit.purpose }}{% endblock %}
+
+{% block page %}
+<p><a class="back-link" href="{{ url_for('requests.index', status=visit.status) }}">← Back to requests</a></p>
+
+<div class="detail-layout">
+
+    <div class="content-card">
+        <div class="card-header">
+            <div><h3>Request details</h3></div>
+            {{ status_badge(visit.status) }}
+        </div>
+        <dl class="detail-list">
+            <dt>Visitor</dt><dd>{{ visit.visitor.full_name }}</dd>
+            <dt>Email</dt><dd>{{ visit.visitor.email }}</dd>
+            <dt>Phone</dt><dd>{{ visit.visitor.phone }}</dd>
+            <dt>Organization</dt><dd>{{ visit.visitor.organization or '—' }}</dd>
+            <dt>Purpose</dt><dd>{{ visit.purpose }}</dd>
+            <dt>Visit date</dt><dd>{{ visit.visit_date.strftime('%A, %d %b %Y') }}</dd>
+            <dt>Wants to meet</dt><dd>{{ visit.host_requested or '—' }}</dd>
+            <dt>Notes</dt><dd>{{ visit.notes or '—' }}</dd>
+            <dt>Submitted</dt><dd>{{ visit.created_at|local_dt }}</dd>
+            <dt>Assigned host</dt><dd>{% if visit.host_assignment %}{{ visit.host_assignment.host.name }}{% else %}Not assigned{% endif %}</dd>
+            {% if visit.reviewed_by %}
+                <dt>Reviewed by</dt><dd>{{ visit.reviewed_by.name }} on {{ visit.reviewed_at|local_dt }}</dd>
+            {% endif %}
+            {% if visit.rejection_reason %}
+                <dt>Rejection reason</dt><dd>{{ visit.rejection_reason }}</dd>
+            {% endif %}
+        </dl>
+    </div>
+
+    <div class="detail-side">
+
+        {% if visit.status == 'Pending' %}
+        <div class="content-card">
+            <div class="card-header"><div><h3>Approve</h3><p>Creates the QR gate pass</p></div></div>
+            <form method="post" action="{{ url_for('requests.approve', request_id=visit.request_id) }}" class="card-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label for="approve-host">Assign a host (optional)</label>
+                    <select id="approve-host" name="host_id">
+                        <option value="">Assign later</option>
+                        {% for host in hosts %}<option value="{{ host.id }}">{{ host.name }}</option>{% endfor %}
+                    </select>
+                </div>
+                <button class="btn btn-primary" type="submit">Approve request</button>
+            </form>
+        </div>
+
+        <div class="content-card">
+            <div class="card-header"><div><h3>Reject</h3><p>The visitor sees your reason</p></div></div>
+            <form method="post" action="{{ url_for('requests.reject', request_id=visit.request_id) }}" class="card-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label for="reason">Reason</label>
+                    <textarea id="reason" name="reason" rows="3" maxlength="500" required></textarea>
+                </div>
+                <button class="btn btn-danger" type="submit">Reject request</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if visit.status in ('Approved', 'Checked In') %}
+        <div class="content-card">
+            <div class="card-header"><div><h3>Host</h3><p>{% if visit.host_assignment %}Currently {{ visit.host_assignment.host.name }}{% else %}No host assigned yet{% endif %}</p></div></div>
+            {% if hosts %}
+            <form method="post" action="{{ url_for('requests.assign_host_route', request_id=visit.request_id) }}" class="card-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label for="assign-host">{% if visit.host_assignment %}Change host{% else %}Assign host{% endif %}</label>
+                    <select id="assign-host" name="host_id" required>
+                        {% for host in hosts %}
+                            <option value="{{ host.id }}" {% if visit.host_assignment and visit.host_assignment.host_id == host.id %}selected{% endif %}>{{ host.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="btn btn-primary" type="submit">Save host</button>
+            </form>
+            {% else %}
+                <p class="card-note">There are no host accounts yet. <a href="{{ url_for('users.new') }}">Create one</a>.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if visit.gate_pass %}
+        <div class="content-card">
+            <div class="card-header"><div><h3>Gate pass</h3><p>{% if visit.gate_pass.is_active %}Active{% else %}Not active{% endif %}</p></div></div>
+            <div class="card-form">
+                <img class="qr-thumb" src="{{ url_for('public.pass_qr', code=visit.gate_pass.pass_code) }}" alt="QR code for {{ visit.request_id }}">
+                <p class="card-note">Valid until {{ visit.gate_pass.valid_until|local_dt }}</p>
+                <p><a class="btn btn-outline" href="{{ url_for('public.gate_pass', code=visit.gate_pass.pass_code) }}" target="_blank" rel="noopener">Open printable pass</a></p>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if visit.status == 'Checked Out' %}
+        <div class="content-card">
+            <div class="card-header"><div><h3>Follow-up</h3><p>The visit is finished</p></div></div>
+            <form method="post" action="{{ url_for('requests.complete', request_id=visit.request_id) }}" class="card-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-primary" type="submit">Mark as completed</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if visit.status in ('Pending', 'Approved') %}
+        <form method="post" action="{{ url_for('requests.cancel', request_id=visit.request_id) }}"
+              onsubmit="return confirm('Cancel this request? The gate pass will stop working.');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline-danger btn-block" type="submit">Cancel request</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+{% if check_ins %}
+<div class="content-card">
+    <div class="card-header"><div><h3>Gate activity</h3></div></div>
+    <div class="table-wrapper">
+        <table class="visitors-table">
+            <thead><tr><th>Checked in</th><th>Checked out</th><th>Guard</th></tr></thead>
+            <tbody>
+                {% for record in check_ins %}
+                <tr>
+                    <td>{{ record.check_in_time|local_dt }}</td>
+                    <td>{{ record.check_out_time|local_dt or 'Still inside' }}</td>
+                    <td>{{ record.security.name if record.security else '—' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'admin/layout.html' %}
+{% set active = 'inside' %}
+
+{% block title %}Inside campus | Campus Gate Pass{% endblock %}
+{% block heading %}Currently Inside Campus{% endblock %}
+{% block subheading %}{{ records|length }} visitor{{ '' if records|length == 1 else 's' }} checked in and not yet out{% endblock %}
+
+{% block page %}
+<div class="content-card">
+    <div class="table-wrapper">
+        <table class="visitors-table">
+            <thead>
+                <tr><th>Visitor</th><th>Request</th><th>Host</th><th>Checked in</th><th>Time inside</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                {% set visit = record.gate_pass.visit_request %}
+                {% set minutes = ((now - record.check_in_time).total_seconds() // 60)|int %}
+                <tr>
+                    <td>
+                        <div class="visitor-cell">
+                            <div>
+                                <strong>{{ visit.visitor.full_name }}</strong>
+                                <span>{{ visit.purpose }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ visit.request_id }}</td>
+                    <td>{% if visit.host_assignment %}{{ visit.host_assignment.host.name }}{% else %}<span class="muted">{{ visit.host_requested or 'Not assigned' }}</span>{% endif %}</td>
+                    <td>{{ record.check_in_time|local_dt }}</td>
+                    <td>{% if minutes >= 60 %}{{ minutes // 60 }} h {{ minutes % 60 }} min{% else %}{{ minutes }} min{% endif %}</td>
+                    <td class="text-right">
+                        <form method="post" action="{{ url_for('gate.do_check_out') }}" class="inline-form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="pass_code" value="{{ record.gate_pass.pass_code }}">
+                            <button class="btn btn-small btn-warning" type="submit">Check out</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr class="empty-row"><td colspan="6">Nobody is inside the campus right now.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

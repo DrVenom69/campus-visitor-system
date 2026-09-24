@@ -1,0 +1,58 @@
+{% extends 'base_public.html' %}
+
+{% block title %}Request a visit | Campus Gate Pass{% endblock %}
+
+{% macro field(name, label, type='text', required=True, placeholder='') %}
+    <label class="form-label" for="{{ name }}">{{ label }}{% if not required %} <span class="text-secondary">(optional)</span>{% endif %}</label>
+    <input class="form-control{% if errors.get(name) %} is-invalid{% endif %}" id="{{ name }}" name="{{ name }}"
+           type="{{ type }}" value="{{ form[name] }}" placeholder="{{ placeholder }}"
+           {% if required %}required{% endif %}
+           {% if type == 'date' %}min="{{ today.isoformat() }}"{% endif %}>
+    {% if errors.get(name) %}<div class="invalid-feedback">{{ errors[name] }}</div>{% endif %}
+{% endmacro %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <h1 class="h3 mb-1">Request a visit</h1>
+        <p class="text-secondary mb-4">Fill in your details. An administrator will review your request.</p>
+
+        <form method="post" action="{{ url_for('public.visit_request') }}" class="card shadow-sm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="card-body p-4">
+                <h2 class="h6 mb-3">About you</h2>
+                <div class="row g-3 mb-4">
+                    <div class="col-12">{{ field('full_name', 'Full name') }}</div>
+                    <div class="col-md-6">{{ field('email', 'Email', type='email') }}</div>
+                    <div class="col-md-6">{{ field('phone', 'Phone number', type='tel') }}</div>
+                    <div class="col-12">{{ field('organization', 'Organization', required=False) }}</div>
+                </div>
+
+                <h2 class="h6 mb-3">Your visit</h2>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="purpose">Purpose</label>
+                        <select class="form-select{% if errors.get('purpose') %} is-invalid{% endif %}" id="purpose" name="purpose" required>
+                            <option value="" disabled {% if not form.purpose %}selected{% endif %}>Choose a purpose</option>
+                            {% for option in purposes %}
+                                <option value="{{ option }}" {% if form.purpose == option %}selected{% endif %}>{{ option }}</option>
+                            {% endfor %}
+                        </select>
+                        {% if errors.get('purpose') %}<div class="invalid-feedback">{{ errors['purpose'] }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">{{ field('visit_date', 'Visit date', type='date') }}</div>
+                    <div class="col-12">{{ field('host_requested', 'Person or department you are visiting', required=False) }}</div>
+                    <div class="col-12">
+                        <label class="form-label" for="notes">Notes <span class="text-secondary">(optional)</span></label>
+                        <textarea class="form-control{% if errors.get('notes') %} is-invalid{% endif %}" id="notes" name="notes" rows="3">{{ form.notes }}</textarea>
+                        {% if errors.get('notes') %}<div class="invalid-feedback">{{ errors['notes'] }}</div>{% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white p-3 text-end">
+                <button class="btn btn-primary" type="submit">Submit request</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'admin/layout.html' %}
+{% set active = 'users' %}
+
+{% block title %}New user | Campus Gate Pass{% endblock %}
+{% block heading %}New user{% endblock %}
+{% block subheading %}Create a host, security or admin account{% endblock %}
+
+{% block page %}
+<p><a class="back-link" href="{{ url_for('users.index') }}">← Back to users</a></p>
+
+<div class="content-card narrow">
+    <form method="post" action="{{ url_for('users.new') }}" class="card-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="form-group {% if errors.name %}has-error{% endif %}">
+            <label for="name">Full name</label>
+            <input id="name" name="name" type="text" value="{{ form.name }}" required>
+            {% if errors.name %}<div class="field-error">{{ errors.name }}</div>{% endif %}
+        </div>
+
+        <div class="form-group {% if errors.email %}has-error{% endif %}">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" value="{{ form.email }}" required>
+            {% if errors.email %}<div class="field-error">{{ errors.email }}</div>{% endif %}
+        </div>
+
+        <div class="form-group {% if errors.role %}has-error{% endif %}">
+            <label for="role">Role</label>
+            <select id="role" name="role" required>
+                <option value="" disabled {% if not form.role %}selected{% endif %}>Choose a role</option>
+                {% for role in roles %}
+                    <option value="{{ role }}" {% if form.role == role %}selected{% endif %}>{{ role|title }}</option>
+                {% endfor %}
+            </select>
+            {% if errors.role %}<div class="field-error">{{ errors.role }}</div>{% endif %}
+            <div class="field-help">Hosts receive visitors. Security staff run the gate. Admins do everything.</div>
+        </div>
+
+        <div class="form-group {% if errors.password %}has-error{% endif %}">
+            <label for="password">Temporary password</label>
+            <input id="password" name="password" type="password" autocomplete="new-password" required>
+            {% if errors.password %}<div class="field-error">{{ errors.password }}</div>{% endif %}
+        </div>
+
+        <button class="btn btn-primary" type="submit">Create account</button>
+    </form>
+</div>
+{% endblock %}
