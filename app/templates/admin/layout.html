@@ -75,7 +75,20 @@
                     🔔{% if pending_count %}<span class="notification-dot"></span>{% endif %}
                 </a>
                 {% endif %}
-                <div class="topbar-avatar">{{ current_user.name[0]|upper }}</div>
+                <details class="user-menu">
+                    <summary class="topbar-avatar" title="Open user menu">{{ current_user.name[0]|upper }}</summary>
+                    <div class="user-menu-panel">
+                        <strong>{{ current_user.name }}</strong>
+                        <span>{{ current_user.email }}</span>
+                        {% if current_user.role == 'admin' %}
+                        <a href="{{ url_for('users.profile') }}">My profile</a>
+                        {% endif %}
+                        <form method="post" action="{{ url_for('auth.logout') }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit">Sign out</button>
+                        </form>
+                    </div>
+                </details>
             </div>
         </header>
 

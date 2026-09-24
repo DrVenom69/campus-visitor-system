@@ -367,5 +367,65 @@ def test_admin_can_deactivate_but_not_self(as_role, app):
     assert b"cannot deactivate your own" in response.data and db.session.get(User, me.id).is_active
 
 
+def test_user_menu_opens_profile(as_role):
+    page = as_role("admin").get("/dashboard")
+    assert b"My profile" in page.data and b"/users/profile" in page.data
+
+
+def test_staff_can_update_profile(as_role, app):
+    client = as_role("admin")
+    response = client.post(
+        "/users/profile",
+        data={"name": "Updated Admin", "email": "updated@campus.edu"},
+        follow_redirects=True,
+    )
+    assert response.status_code == 200 and b"profile has been updated" in response.data
+    user = User.query.filter_by(email="updated@campus.edu").one()
+    assert user.name == "Updated Admin"
+    assert b"Updated Admin" in client.get("/users/profile").data
+
+    assert login(app.test_client(), "updated@campus.edu").status_code == 302
+
+
+def test_profile_rejects_duplicate_email(as_role):
+    client = as_role("admin")
+    response = client.post(
+        "/users/profile",
+        data={"name": "Test Admin", "email": "host@campus.edu"},
+    )
+    assert response.status_code == 400 and b"already exists" in response.data
+
+
+def test_staff_can_change_password(as_role, app):
+    client = as_role("admin")
+    response = client.post(
+        "/users/profile/password",
+        data={
+            "current_password": PASSWORD,
+            "new_password": "new-secure-password",
+            "confirm_password": "new-secure-password",
+        },
+        follow_redirects=True,
+    )
+    assert response.status_code == 200 and b"password has been changed" in response.data
+    assert login(app.test_client(), "admin@campus.edu", PASSWORD).status_code == 401
+    assert login(app.test_client(), "admin@campus.edu", "new-secure-password").status_code == 302
+
+
+def test_password_change_validates_current_and_confirmation(as_role):
+    client = as_role("admin")
+    response = client.post(
+        "/users/profile/password",
+        data={
+            "current_password": "wrong-password",
+            "new_password": "new-secure-password",
+            "confirm_password": "different-password",
+        },
+    )
+    assert response.status_code == 400
+    assert b"current password is incorrect" in response.data
+    assert b"Passwords do not match" in response.data
+
+
 def test_toggle_unknown_user_is_404(as_role):
     assert as_role("admin").post("/users/9999/toggle").status_code == 404

@@ -30,6 +30,7 @@
     <div class="button-row">
         <button class="btn btn-primary" type="submit">Filter</button>
         <a class="btn btn-outline" href="{{ url_for('history.index') }}">Clear</a>
+        <a class="btn btn-outline" href="{{ url_for('history.export', **request.args) }}">Download CSV</a>
     </div>
 </form>
 

@@ -88,4 +88,6 @@
             start();
         }
     });
+
+    window.addEventListener("pagehide", stop);
 })();

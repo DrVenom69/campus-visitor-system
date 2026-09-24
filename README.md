@@ -124,6 +124,12 @@ pytest -q                                          # uses in-memory SQLite, take
 TEST_DATABASE_URL=postgresql://user:pass@localhost/campus_visitor_test pytest -q   # same tests on PostgreSQL
 ```
 
+## Documentation
+
+- [User guide](docs/user-guide.md): visitor, admin, security, and host workflows
+- [Database model](docs/database.md): ER diagram and status flow
+- `docs/screenshots/`: screenshots to capture during the demo walkthrough
+
 ## Team workflow
 
 - `main` always runs and passes `pytest`. Do not push to it directly.
@@ -137,4 +143,4 @@ TEST_DATABASE_URL=postgresql://user:pass@localhost/campus_visitor_test pytest -q
 - No rate limiting on login or the status lookup.
 - Tables are created with `create_all`; after changing a model in development run `flask --app run init-db --reset` (deletes data). Add Flask-Migrate before real use.
 - `python run.py` is the development server. Use gunicorn behind HTTPS for real deployment.
-- Visitor reports / CSV export, visit reminders, and a visitor-side cancel button are not built.
+- Visitor reports and visit reminders are not built.

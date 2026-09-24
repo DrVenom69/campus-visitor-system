@@ -1,0 +1,62 @@
+{% extends 'admin/layout.html' %}
+{% set active = 'profile' %}
+
+{% block title %}My profile | Campus Gate Pass{% endblock %}
+{% block heading %}My profile{% endblock %}
+{% block subheading %}Manage your account details and password{% endblock %}
+
+{% block page %}
+<div class="profile-grid">
+    <div class="content-card">
+        <div class="card-header">
+            <div>
+                <h3>Profile details</h3>
+                <p>Your name and email address</p>
+            </div>
+        </div>
+        <form method="post" action="{{ url_for('users.profile') }}" class="card-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-group {% if errors.name %}has-error{% endif %}">
+                <label for="name">Full name</label>
+                <input id="name" name="name" type="text" value="{{ form.name }}" required>
+                {% if errors.name %}<div class="field-error">{{ errors.name }}</div>{% endif %}
+            </div>
+            <div class="form-group {% if errors.email %}has-error{% endif %}">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" value="{{ form.email }}" required>
+                {% if errors.email %}<div class="field-error">{{ errors.email }}</div>{% endif %}
+            </div>
+            <div class="profile-role">Role <strong>{{ current_user.role|title }}</strong></div>
+            <button class="btn btn-primary" type="submit">Save profile</button>
+        </form>
+    </div>
+
+    <div class="content-card">
+        <div class="card-header">
+            <div>
+                <h3>Change password</h3>
+                <p>Use a password you do not reuse elsewhere</p>
+            </div>
+        </div>
+        <form method="post" action="{{ url_for('users.change_password') }}" class="card-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-group {% if password_errors.current_password %}has-error{% endif %}">
+                <label for="current_password">Current password</label>
+                <input id="current_password" name="current_password" type="password" autocomplete="current-password" required>
+                {% if password_errors.current_password %}<div class="field-error">{{ password_errors.current_password }}</div>{% endif %}
+            </div>
+            <div class="form-group {% if password_errors.new_password %}has-error{% endif %}">
+                <label for="new_password">New password</label>
+                <input id="new_password" name="new_password" type="password" autocomplete="new-password" required>
+                {% if password_errors.new_password %}<div class="field-error">{{ password_errors.new_password }}</div>{% endif %}
+            </div>
+            <div class="form-group {% if password_errors.confirm_password %}has-error{% endif %}">
+                <label for="confirm_password">Confirm new password</label>
+                <input id="confirm_password" name="confirm_password" type="password" autocomplete="new-password" required>
+                {% if password_errors.confirm_password %}<div class="field-error">{{ password_errors.confirm_password }}</div>{% endif %}
+            </div>
+            <button class="btn btn-primary" type="submit">Change password</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

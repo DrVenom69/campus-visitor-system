@@ -8,6 +8,7 @@ from app import db
 from app.constants import PURPOSES
 from app.models import GatePass, Visitor, VisitRequest
 from app.qr import qr_png
+from app.services import ServiceError, cancel_request
 from app.utils import EMAIL_PATTERN, generate_request_id, today_local
 
 bp = Blueprint("public", __name__)
@@ -148,6 +149,27 @@ def status():
             status_code = 404
 
     return render_template("status.html", form=form, visit=visit), status_code
+
+
+@bp.route("/status/cancel", methods=["POST"])
+def cancel_status():
+    """Cancel a visitor request after verifying the request ID and email again."""
+    form = {
+        "request_id": request.form.get("request_id", "").strip().upper(),
+        "email": request.form.get("email", "").strip().lower(),
+    }
+    visit = VisitRequest.query.filter_by(request_id=form["request_id"]).first()
+    if visit is None or visit.visitor.email != form["email"]:
+        abort(404)
+
+    try:
+        cancel_request(visit, actor=None)
+    except ServiceError as error:
+        flash(str(error), "danger")
+        return render_template("status.html", form=form, visit=visit), 400
+
+    flash("Your visit request has been cancelled.", "success")
+    return render_template("status.html", form=form, visit=visit)
 
 
 @bp.route("/pass/<code>")

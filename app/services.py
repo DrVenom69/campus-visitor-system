@@ -78,7 +78,7 @@ def reject_request(visit, admin, reason):
     db.session.commit()
 
 
-def cancel_request(visit, admin):
+def cancel_request(visit, actor):
     """Pending or Approved -> Cancelled. The gate pass stops working."""
     if visit.status not in ("Pending", "Approved"):
         raise ServiceError("Only pending or approved requests can be cancelled.")
