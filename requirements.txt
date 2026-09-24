@@ -1,8 +1,9 @@
-Flask>=3.0,<4
-Flask-SQLAlchemy>=3.1,<4
-Flask-Login>=0.6.3,<0.7
-Flask-WTF>=1.2,<2
+Flask<4,>=3.0
+Flask-SQLAlchemy<4,>=3.1
+Flask-Login<0.7,>=0.6.3
+Flask-WTF<2,>=1.2
 psycopg2-binary>=2.9
 python-dotenv>=1.0
 qrcode[pil]>=7.4
 tzdata
+gunicorn>=21.2.0
