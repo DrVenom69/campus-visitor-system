@@ -3,17 +3,138 @@ body.public {
     color: #1f2937;
 }
 
+.site-header {
+    position: relative;
+    z-index: 2;
+    min-height: 76px;
+    background: #fff;
+    border-bottom: 3px solid #f39222;
+    box-shadow: 0 5px 22px rgba(24, 24, 20, 0.08);
+}
+
+.site-brand {
+    color: #1b1a17;
+}
+
+.site-brand:hover {
+    color: #a64f00;
+}
+
+.brand-copy {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.brand-copy strong {
+    font-size: 0.96rem;
+}
+
+.brand-copy small {
+    margin-top: 4px;
+    color: #77736a;
+    font-size: 0.72rem;
+    font-weight: 500;
+}
+
+.site-header .site-action,
+.site-header .site-link {
+    border-radius: 6px;
+    font-weight: 650;
+    padding: 0.55rem 0.85rem;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.site-header .site-action {
+    border: 1px solid #1b1a17;
+    background: #1b1a17;
+    color: #ffe500;
+}
+
+.site-header .site-action:hover {
+    transform: translateY(-1px);
+    background: #a64f00;
+    border-color: #a64f00;
+    color: #fff;
+}
+
+.site-header .site-link {
+    color: #38352f;
+}
+
+.site-header .site-link:hover {
+    background: #fff8d7;
+    color: #a64f00;
+}
+
+.home-main {
+    max-width: none;
+    padding: 0 !important;
+}
+
+.home-hero {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    align-items: center;
+    min-height: calc(100vh - 120px);
+    padding: 4rem 0;
+    overflow: hidden;
+    color: #fff;
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.62)),
+        url("../images/bg%20image%20(2).jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+.home-hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.home-hero-copy {
+    max-width: 780px;
+}
+
+.home-hero h1 {
+    text-wrap: balance;
+}
+
+.home-hero p {
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.home-hero .btn-light {
+    color: #173b3e;
+}
+
+.home-hero .btn-outline-light:hover,
+.home-hero .btn-outline-light:focus-visible {
+    color: #173b3e;
+}
+
 .brand-mark {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 9px;
-    background: #2563eb;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 700;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+    border: 2px solid #1b1a17;
+    border-radius: 50%;
+    background: #ffe500;
+}
+
+.brand-mark img {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 116px;
+    max-width: none;
+    transform: translateX(-50%);
 }
 
 .request-id {
@@ -30,7 +151,7 @@ body.public {
 }
 
 .pass-header {
-    background: #2563eb;
+    background: #1b1a17;
     color: #fff;
     padding: 14px;
 }
@@ -60,4 +181,28 @@ body.public {
 @media print {
     body.public { background: #fff; }
     .pass-card { box-shadow: none !important; border: 1px solid #ccc; }
+}
+
+@media (max-width: 767px) {
+    .site-header .container {
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.45rem 0.75rem;
+        padding-top: 0.7rem;
+        padding-bottom: 0.7rem;
+    }
+
+    .site-nav {
+        width: 100%;
+        justify-content: center !important;
+        flex-wrap: nowrap !important;
+        gap: 0.35rem !important;
+    }
+
+    .site-header .site-action,
+    .site-header .site-link {
+        padding: 0.45rem 0.65rem;
+        font-size: 0.8rem;
+    }
 }

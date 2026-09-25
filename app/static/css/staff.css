@@ -55,7 +55,7 @@
 .flash-success { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
 .flash-danger  { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
 .flash-warning { background: #fffbeb; color: #b45309; border-color: #fde68a; }
-.flash-info    { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+.flash-info    { background: var(--seu-pale); color: var(--seu-orange-dark); border-color: #f4d36c; }
 
 /* ---- buttons ---- */
 .btn {
@@ -77,23 +77,23 @@
 .form-group input:focus-visible,
 .form-group select:focus-visible,
 .form-group textarea:focus-visible {
-    outline: 2px solid #2563eb;
+    outline: 2px solid var(--seu-orange);
     outline-offset: 2px;
 }
 
-.btn-primary { background: #2563eb; color: #fff; }
-.btn-primary:hover { background: #1d4ed8; }
+.btn-primary { background: var(--seu-orange-dark); color: #fff; }
+.btn-primary:hover { background: #853f00; }
 .btn-danger { background: #dc2626; color: #fff; }
 .btn-danger:hover { background: #b91c1c; }
-.btn-warning { background: #f59e0b; color: #fff; }
-.btn-warning:hover { background: #d97706; }
+.btn-warning { background: var(--seu-orange); color: var(--seu-ink); }
+.btn-warning:hover { background: #e17b10; }
 .btn-outline { background: #fff; color: #374151; border-color: #d1d5db; }
 .btn-outline:hover { background: #f9fafb; }
 .btn-outline-danger { background: #fff; color: #dc2626; border-color: #fca5a5; }
 .btn-outline-danger:hover { background: #fef2f2; }
 .btn-small { padding: 6px 12px; font-size: 12px; background: #f3f4f6; color: #374151; }
 .btn-small:hover { background: #e5e7eb; }
-.btn-small.btn-warning { background: #f59e0b; color: #fff; }
+.btn-small.btn-warning { background: var(--seu-orange); color: var(--seu-ink); }
 .btn-block { width: 100%; }
 
 .button-row {
@@ -188,8 +188,8 @@
     font-weight: 600;
 }
 
-.tab:hover { border-color: #93c5fd; }
-.tab.active { background: #2563eb; border-color: #2563eb; color: #fff; }
+.tab:hover { border-color: var(--seu-orange); }
+.tab.active { background: var(--seu-ink); border-color: var(--seu-yellow); color: var(--seu-yellow); }
 
 .tab-count {
     margin-left: 4px;
@@ -225,7 +225,7 @@
     color: #6b7280;
 }
 
-.pagination a { color: #2563eb; font-weight: 600; }
+.pagination a { color: var(--seu-orange-dark); font-weight: 600; }
 
 /* ---- detail pages ---- */
 .detail-layout {

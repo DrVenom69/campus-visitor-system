@@ -2,6 +2,14 @@
    Dashboard Layout
 ========================================= */
 
+:root {
+    --seu-ink: #1b1a17;
+    --seu-yellow: #ffe500;
+    --seu-orange: #f39222;
+    --seu-orange-dark: #a64f00;
+    --seu-pale: #fff8d7;
+}
+
 .dashboard {
     min-height: 100vh;
     display: flex;
@@ -37,16 +45,27 @@
 }
 
 .logo-icon {
+    position: relative;
     width: 42px;
     height: 42px;
+    overflow: hidden;
     border-radius: 10px;
-    background: #2563eb;
-    color: #ffffff;
+    background: var(--seu-yellow);
+    color: var(--seu-ink);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 14px;
     font-weight: 700;
+}
+
+.logo-icon img {
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    width: 108px;
+    max-width: none;
+    transform: translateX(-50%);
 }
 
 .sidebar-logo h2 {
@@ -85,12 +104,12 @@
 
 .nav-item:hover {
     background: #f3f6fb;
-    color: #2563eb;
+    color: var(--seu-orange-dark);
 }
 
 .nav-item.active {
-    background: #eff6ff;
-    color: #2563eb;
+    background: var(--seu-pale);
+    color: var(--seu-orange-dark);
     font-weight: 600;
 }
 
@@ -135,8 +154,8 @@
 .user-avatar {
     width: 38px;
     height: 38px;
-    background: #dbeafe;
-    color: #2563eb;
+    background: var(--seu-yellow);
+    color: var(--seu-ink);
     font-size: 13px;
 }
 
@@ -233,7 +252,7 @@
 .topbar-avatar {
     width: 38px;
     height: 38px;
-    background: #2563eb;
+    background: var(--seu-ink);
     color: #ffffff;
     font-size: 13px;
 }
@@ -257,7 +276,8 @@
 ========================================= */
 
 .welcome-card {
-    background: #1d4ed8;
+    background: var(--seu-ink);
+    border-left: 5px solid var(--seu-yellow);
     color: #ffffff;
     border-radius: 14px;
     padding: 30px 32px;
@@ -285,7 +305,7 @@
 
 .primary-btn {
     background: #ffffff;
-    color: #1d4ed8;
+    color: var(--seu-ink);
     padding: 12px 18px;
     border-radius: 8px;
     font-size: 13px;
@@ -331,7 +351,7 @@
 }
 
 .visitors-icon {
-    background: #eff6ff;
+    background: var(--seu-pale);
 }
 
 .active-icon {
@@ -400,7 +420,7 @@
 }
 
 .view-all {
-    color: #2563eb;
+    color: var(--seu-orange-dark);
     font-size: 12px;
     font-weight: 600;
 }
@@ -608,8 +628,8 @@
 ========================================= */
 
 .approved {
-    background: #eff6ff;
-    color: #2563eb;
+    background: var(--seu-pale);
+    color: var(--seu-orange-dark);
 }
 
 .completed {

@@ -1,18 +1,20 @@
 {% extends 'base_public.html' %}
 
 {% block content %}
-<div class="row justify-content-center py-5">
-    <div class="col-lg-8 text-center">
-        <h1 class="display-5 fw-semibold mb-3">Visiting the campus? Request your gate pass online.</h1>
-        <p class="lead text-secondary mb-4">
-            Tell us who you are and when you are coming. Once an administrator approves your visit,
-            you get a digital gate pass with a QR code to show at the gate.
-        </p>
-        <div class="d-flex justify-content-center gap-2 flex-wrap">
-            <a class="btn btn-primary btn-lg" href="{{ url_for('public.visit_request') }}">Request a visit</a>
-            <a class="btn btn-outline-primary btn-lg" href="{{ url_for('public.status') }}">Check my request</a>
-            <a class="btn btn-outline-secondary btn-lg" href="{{ url_for('auth.login') }}">Staff login</a>
+<section class="home-hero">
+    <div class="container home-hero-content text-center">
+        <div class="home-hero-copy mx-auto">
+            <h1 class="display-5 fw-semibold mb-3">Visiting the campus? Request your gate pass online.</h1>
+            <p class="lead mb-4">
+                Tell us who you are and when you are coming. Once an administrator approves your visit,
+                you get a digital gate pass with a QR code to show at the gate.
+            </p>
+            <div class="d-flex justify-content-center gap-2 flex-wrap">
+                <a class="btn btn-light btn-lg" href="{{ url_for('public.visit_request') }}">Request a visit</a>
+                <a class="btn btn-outline-light btn-lg" href="{{ url_for('public.status') }}">Check my request</a>
+                <a class="btn btn-outline-light btn-lg" href="{{ url_for('auth.login') }}">Staff login</a>
+            </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}
