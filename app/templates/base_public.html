@@ -10,28 +10,29 @@
 </head>
 <body class="public d-flex flex-column min-vh-100">
 
-<nav class="navbar navbar-expand-sm bg-white border-bottom d-print-none">
+<nav class="navbar navbar-expand-sm site-header d-print-none">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center gap-2 fw-semibold" href="{{ url_for('public.index') }}">
-            <span class="brand-mark">CG</span> Campus Gate Pass
+        <a class="navbar-brand site-brand d-flex align-items-center gap-3" href="{{ url_for('public.index') }}">
+            <span class="brand-mark" aria-hidden="true"><img src="{{ url_for('static', filename='images/seu-logo.png') }}" alt=""></span>
+            <span class="brand-copy"><strong>Southeast University</strong><small>Campus Gate Pass</small></span>
         </a>
-        <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
-            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('public.visit_request') }}">Request a visit</a>
-            <a class="btn btn-sm btn-link" href="{{ url_for('public.status') }}">Check status</a>
+        <div class="site-nav d-flex align-items-center gap-2 flex-wrap justify-content-end">
+            <a class="btn btn-sm site-action" href="{{ url_for('public.visit_request') }}">Request a visit</a>
+            <a class="btn btn-sm site-link" href="{{ url_for('public.status') }}">Check status</a>
             {% if current_user.is_authenticated %}
-                <a class="btn btn-sm btn-primary" href="{{ url_for('dashboard.index') }}">Dashboard</a>
+                <a class="btn btn-sm site-action" href="{{ url_for('dashboard.index') }}">Dashboard</a>
                 <form method="post" action="{{ url_for('auth.logout') }}" class="m-0">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-link text-secondary" type="submit">Log out</button>
+                    <button class="btn btn-sm site-link" type="submit">Log out</button>
                 </form>
             {% else %}
-                <a class="btn btn-sm btn-link" href="{{ url_for('auth.login') }}">Staff login</a>
+                <a class="btn btn-sm site-link" href="{{ url_for('auth.login') }}">Staff login</a>
             {% endif %}
         </div>
     </div>
 </nav>
 
-<main class="container py-4 flex-grow-1">
+<main class="container py-4 flex-grow-1{% if request.endpoint == 'public.index' %} home-main{% endif %}">
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}
             <div class="alert alert-{{ category }} d-print-none" role="alert">{{ message }}</div>
@@ -41,7 +42,7 @@
     {% block content %}{% endblock %}
 </main>
 
-<footer class="text-center text-secondary small py-3 d-print-none">Campus Visitor Management and Digital Gate Pass System</footer>
+<footer class="text-center text-secondary small py-3 d-print-none">Southeast University · Campus Visitor Management</footer>
 
 </body>
 </html>
