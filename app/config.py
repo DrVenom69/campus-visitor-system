@@ -10,9 +10,13 @@ class Config:
 
     # Set DATABASE_URL in .env to use PostgreSQL. Without it the app falls back
     # to a local SQLite file so a teammate can still run it on day one.
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL", "sqlite:///campus_visitor_dev.db"
-    )
+    _raw_database_url = os.environ.get("DATABASE_URL", "sqlite:///campus_visitor_dev.db")
+    if _raw_database_url.startswith("postgres://"):
+        _raw_database_url = _raw_database_url.replace("postgres://", "postgresql://", 1)
+    elif _raw_database_url.startswith("postgresql+psycopg://"):
+        _raw_database_url = _raw_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
+
+    SQLALCHEMY_DATABASE_URI = _raw_database_url
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Visit dates and "today" are calculated in this timezone (times are stored in UTC).
